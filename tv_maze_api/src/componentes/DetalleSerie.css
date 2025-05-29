@@ -1,0 +1,42 @@
+/* DetalleSerie.css */
+
+.boton-favorito {
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.boton-agregar {
+  background-color: #2ecc71;
+}
+
+.boton-eliminar {
+  background-color: #e74c3c;
+}
+
+
+/* botones redes*/
+
+.compartir-redes {
+  margin-top: 1rem;
+}
+
+.compartir-redes p {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.compartir-boton {
+  margin-right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.compartir-boton:hover {
+  opacity: 0.8;
+}

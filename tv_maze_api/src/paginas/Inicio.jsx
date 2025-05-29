@@ -2,39 +2,40 @@ import { useEffect, useState } from 'react';
 import MenuPrincipal from '../componentes/MenuPrincipal';
 import BuscadorSeries from '../componentes/BuscadorSeries';
 import ListaSeries from '../componentes/ListaSeries';
-import { buscarSeriesPorNombre } from '../servicios/apiTvMaze';
+import { buscarSeriesPorNombre, obtenerSeriesPopulares } from '../servicios/apiTvMaze';
+import BotonSorpresa from '../componentes/BotonSorpresa';
 
 function Inicio() {
   const [series, setSeries] = useState([]);
-  const [seriesOriginales, setSeriesOriginales] = useState([]);
-  const [filtroGenero, setFiltroGenero] = useState('');
+  const [todasSeries, setTodasSeries] = useState([]);
+  const [generoSeleccionado, setGeneroSeleccionado] = useState('');
 
   useEffect(() => {
-    // Cargar una lista inicial de series
-    async function cargarSeriesIniciales() {
-      const resultados = await buscarSeriesPorNombre('a');
+    async function cargarSeries() {
+      const resultados = await obtenerSeriesPopulares(); // llamamos las populares
+      setTodasSeries(resultados);
       setSeries(resultados);
-      setSeriesOriginales(resultados);
     }
-
-    cargarSeriesIniciales();
+    cargarSeries();
   }, []);
 
   const buscar = async (nombre) => {
     if (nombre.trim().length > 0) {
       const resultados = await buscarSeriesPorNombre(nombre);
       setSeries(resultados);
-      setSeriesOriginales(resultados);
-      setFiltroGenero(''); // Reiniciar filtro
+    } else {
+      setSeries(todasSeries);
     }
   };
 
-  const filtrarPorGenero = (genero) => {
-    setFiltroGenero(genero);
+  const filtrarPorGenero = (e) => {
+    const genero = e.target.value;
+    setGeneroSeleccionado(genero);
+
     if (genero === '') {
-      setSeries(seriesOriginales);
+      setSeries(todasSeries);
     } else {
-      const filtradas = seriesOriginales.filter((serie) =>
+      const filtradas = todasSeries.filter((serie) =>
         serie.genres.includes(genero)
       );
       setSeries(filtradas);
@@ -47,19 +48,19 @@ function Inicio() {
       <h1>Explorar Series</h1>
       <BuscadorSeries onBuscar={buscar} />
 
-      <div>
-        <label>Filtrar por género: </label>
-        <select value={filtroGenero} onChange={(e) => filtrarPorGenero(e.target.value)}>
-          <option value="">Todos</option>
-          <option value="Drama">Drama</option>
-          <option value="Comedy">Comedia</option>
-          <option value="Action">Acción</option>
-          <option value="Science-Fiction">Ciencia Ficción</option>
-          <option value="Horror">Terror</option>
-        </select>
-      </div>
+      <label htmlFor="filtro-genero">Filtrar por género: </label>
+      <select id="filtro-genero" value={generoSeleccionado} onChange={filtrarPorGenero}>
+        <option value="">Todos</option>
+        <option value="Drama">Drama</option>
+        <option value="Comedy">Comedy</option>
+        <option value="Thriller">Thriller</option>
+        <option value="Action">Action</option>
+        <option value="Science-Fiction">Science-Fiction</option>
+        <option value="Romance">Romance</option>
+      </select>
 
       <ListaSeries series={series} />
+      <BotonSorpresa />
     </div>
   );
 }

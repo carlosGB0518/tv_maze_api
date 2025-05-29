@@ -1,11 +1,17 @@
 import TarjetaSerie from './TarjetaSerie';
 
 function ListaSeries({ series }) {
+  if (!series || series.length === 0) {
+    return <p>No se encontraron series.</p>;
+  }
+
   return (
     <div>
-      {series.map(item => (
-        <TarjetaSerie key={item.show.id} serie={item.show} />
-      ))}
+      {series
+        .filter(serie => serie && serie.id) // Protección extra
+        .map(serie => (
+          <TarjetaSerie key={serie.id} serie={serie} />
+        ))}
     </div>
   );
 }

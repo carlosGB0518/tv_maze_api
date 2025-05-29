@@ -11,13 +11,13 @@ function InicioSesion() {
   const manejarEnvio = async (e) => {
     e.preventDefault();
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error: errorInicio } = await supabase.auth.signInWithPassword({
       email: correo,
       password: clave,
     });
 
-    if (error) {
-      setError(error.message);
+    if (errorInicio) {
+      setError(errorInicio.message);
     } else {
       setError('');
       navigate('/');

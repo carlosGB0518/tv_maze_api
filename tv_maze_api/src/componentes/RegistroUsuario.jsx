@@ -12,18 +12,20 @@ function RegistroUsuario() {
   const manejarEnvio = async (e) => {
     e.preventDefault();
 
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error: errorRegistro } = await supabase.auth.signUp({
       email: correo,
       password: clave,
     });
 
-    if (error) {
-      setError(error.message);
+    if (errorRegistro) {
+      setError(errorRegistro.message);
       setMensaje('');
     } else {
+      // Guardar el correo en la tabla `usuarios`
+      await supabase.from('usuarios').insert([{ correo }]);
+
       setError('');
       setMensaje('Registro exitoso. Revisa tu correo para confirmar.');
-      // Opcional: redirigir después de unos segundos
       setTimeout(() => {
         navigate('/inicio-sesion');
       }, 3000);
